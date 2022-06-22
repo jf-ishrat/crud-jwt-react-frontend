@@ -1,38 +1,35 @@
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
-import Home from './Home';
 import Footer from './component/Footer';
 import Navbar from './component/Navbar';
-import AuthService from "./services/auth.service";
-import Login from './Login';
-import SearchDetails from './SearchDetails';
-import TopUserByCountry from './TopUserByCountry';
-import TopRepositories from './TopRepositories';
-import DataVisual from './DataVisual';
+import Admin from './pages/Admin';
+import Member from './pages/Member';
+import Login from './pages/Login';
+import AddMember from './pages/AddMember';
+import EditMember from './pages/EditMember';
+
 
 
 function App() {
-  const user = AuthService.getUser();
+ // const user = AuthService.getUser();
   return (
-  
-         <div className="App">
+   <div className="App">
     <Navbar /> 
 
 <div className="content">
      <Routes>
         <Route path="/" element={ <Login/> } />
-        <Route path="/home" element={ <Home/> } />
-        <Route path="/details/:id" element={ <SearchDetails/> } />
-        <Route path="/top-user-by-country" element={ <TopUserByCountry/> } />
-        <Route path="/top-repositories" element={ <TopRepositories/> } />
-        <Route path="/data-visualization" element={ <DataVisual/> } />
+         <Route exact path="/admin-dashboard" element={ <Admin/> } />
+        <Route exact path="/member-profile/:id" element={ <Member/> } />
+        <Route exact path="/admin-dashboard/add" element={ <AddMember/> } />
+        <Route exact path="/admin-dashboard/Edit/:id" element={ <EditMember/> } />
       
       </Routes>
 
 
      </div>
 
-    <Footer /> 
+    {/* <Footer />  */}
     
     </div>
  
