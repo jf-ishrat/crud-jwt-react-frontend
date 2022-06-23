@@ -26,7 +26,6 @@ const Navbar = () => {
   }, []);
   const handleLogout = async() => {
     await AuthService.logout();
-    navigate(0);
   };
 
 

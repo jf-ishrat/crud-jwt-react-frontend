@@ -26,12 +26,14 @@ const Admin = () => {
 
         }
         else{
+            let isMounted = true;
+            const controller = new AbortController();
           const getData = async()=>{
             try {
-                const response = await axios.get("http://localhost:8080/api/employees",{ headers: authHeader()});
+                const response = await axios.get("http://localhost:8080/api/employees",{ headers: authHeader()}, {signal: controller.signal});
 
                 const result = await response.data;
-                setData(result)
+                isMounted && setData(result)
                 
             } catch (error) {
 
@@ -41,6 +43,12 @@ const Admin = () => {
           }
 
           getData();
+
+          return ()=>{
+            isMounted = false;
+            controller.abort();
+
+          }
 
         }
 

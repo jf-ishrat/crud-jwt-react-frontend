@@ -17,36 +17,44 @@ const axios = require('axios').default;
 const Member = () => {
 
     const [data, setData] = useState(null);
-
-
     const {id} = useParams();
+    const navigate = useNavigate();
+    const user = AuthService.getCurrentUser();
 
     useEffect(()=>{
-        const a = id.split("/");
+      if(user){
 
+        let employee_id;
 
-        const fetchData = async()=>{
-           try {
-            const res = await axios.get(`http://localhost:8080/api/employees/${a[0]}`, {headers: authHeader()});
-
-            const resData = await res.data;
-            setData(resData);
-                       
-           } catch (error) {
-            console.log(error);
-            
-           }
+        if(user.role.includes("Admin")){
+           employee_id = id.split("/");
+        }
+        else{
+           employee_id = user.employee_id;
 
         }
-        fetchData();
+
+        const fetchData = async()=>{
+          try {
+           const res = await axios.get(`http://localhost:8080/api/employees/${employee_id}`, {headers: authHeader()});
+
+           const resData = await res.data;
+           setData(resData);
+                      
+          } catch (error) {
+           console.log(error);
+           
+          }
+
+       }
+       fetchData();
+
+      }
+       
 
     },[]);
 
 
-
-    const user = AuthService.getCurrentUser();
-
-    const navigate = useNavigate();
 
 
     
@@ -55,6 +63,24 @@ const Member = () => {
 { data ? 
 
 <Form>
+<Row>
+  <Col md={6}>
+    <FormGroup>
+      <Label for="exampleEmployeeId">
+        Employee ID
+      </Label>
+      <Input
+        id="exampleEmployeeId"
+        name="firstName"
+        placeholder="John"
+        type="text"
+        value={data.employeeId}
+        readOnly
+      />
+    </FormGroup>
+  </Col>
+  
+</Row>
 <Row>
   <Col md={6}>
     <FormGroup>

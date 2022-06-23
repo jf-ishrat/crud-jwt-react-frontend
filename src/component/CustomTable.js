@@ -69,7 +69,7 @@ const CustomTable = ({tableHeaders, tableContents, onChangeValue}) => {
   <Button color="danger" outline onClick={(e) => window.confirm('Are you sure you wish to delete this member?') ? handleDelete(item.employeeId) : null}>
     Delete
   </Button>
-  <Button color="primary" outline onClick={ (e) => navigate(`/member-profile/${item.employeeId}`)}>
+  <Button color="primary" outline onClick={ (e) => navigate(`profile/${item.employeeId}`)}>
     View
   </Button>
 </ButtonGroup>

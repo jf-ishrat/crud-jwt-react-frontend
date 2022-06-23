@@ -65,10 +65,12 @@ const Login = () => {
 
         if(data.role.includes("admin") || data.role.includes("Admin")){
             navigate("/admin-dashboard");
+            window.location.reload();
            
         }
         else{
-            navigate(`/member-profile/${data.employee_id}`);
+            navigate(`/profile`);
+            window.location.reload();
     
         }
 

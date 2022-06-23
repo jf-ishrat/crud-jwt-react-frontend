@@ -21,6 +21,7 @@ const login = (body) => {
 
 const logout = () => {
   localStorage.removeItem("user");
+  window.location.reload();
 };
 
 const getCurrentUser = () => {

@@ -20,12 +20,14 @@
 }
 .navbar .links {
   margin-left: auto;
+  font-size: 18px;
+
 
 }
 .navbar a {
   margin-left: 16px;
   text-decoration: none;
-  padding: 6px;
+  padding: 5px 10px;
 }
 .navbar a:hover {
   color: #016097;
@@ -46,7 +48,7 @@
 }
 
 .container-class {
-  margin : auto 50px;
+  margin : auto 70px;
 
 }
 
