@@ -1,78 +1,73 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
 import {
-  Button
-} from 'reactstrap';
-import { useNavigate } from 'react-router-dom';
-import AuthService from "../services/auth.service";
+  ButtonDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  UncontrolledButtonDropdown,
+  Button,
+} from "reactstrap";
 
+import { useNavigate } from "react-router-dom";
+
+import useAuth from "../hooks/useAuth";
 
 const Navbar = () => {
-  const user = AuthService.getCurrentUser();
   const navigate = useNavigate();
+  const auth = useAuth();
 
-  const [showMemberBoard, setShowMemberBoard] = useState("");
-  const [showAdminBoard, setShowAdminBoard] = useState(false);
-  const [currentUser, setCurrentUser] = useState(undefined);
-  useEffect(() => {
-   // const user = AuthService.getCurrentUser();
-
-    if (user) {
-      setCurrentUser(user);
-      // setShowMemberBoard(user?.role.includes("member"));
-         setShowAdminBoard(user.role.includes("admin") || user.role.includes("Admin"));
-    }
-  
-  }, []);
-  const handleLogout = async() => {
-    await AuthService.logout();
+  const handleLogout = async () => {
+    await auth.logout();
   };
-
 
   return (
     <nav className="navbar">
       <h1>DSi</h1>
-    
+
       <div className="links">
-       {showAdminBoard &&
-       <>
-        {adminMenu.map((item)=>(
-            <Link key={item.id} to={item.path}>{item.name}</Link>
+        {auth?.user?.permissions?.includes("view-member-list") && (
+          <Link to="/employees">Employees</Link>
+        )}
 
-          ))}
+        {auth?.user?.permissions?.includes("add-member") && (
+          <Button
+            color="primary"
+            outline
+            onClick={(e) => navigate("/employees/add")}
+          >
+            Add Employee
+          </Button>
+        )}
 
-        <Link to="/admin-dashboard/add" style={{ 
-            color: 'white', 
-            backgroundColor: '#0277bd'
-          }}
-         // onClick={addNewEmployee}
-          >Add Employee</Link>
-       </>
-         
-        
-        } 
-
-       {currentUser &&
-           <Link to="/" style={{ 
-            color: 'white', 
-            backgroundColor: '#0277bd'
-          }}
-          onClick={handleLogout}
-          >Logout</Link>
-        }
-        
+        {auth?.user?.access_token ? (
+          <UncontrolledButtonDropdown
+            className="dropdown-button"
+            color="primary"
+          >
+            <DropdownToggle caret>
+              {auth.user.username.split("@")[0]}
+            </DropdownToggle>
+            <DropdownMenu>
+              <DropdownItem onClick={(e) => navigate("/profile")}>
+                Profile
+              </DropdownItem>
+              <DropdownItem divider />
+              <DropdownItem onClick={handleLogout}>Logout</DropdownItem>
+            </DropdownMenu>
+          </UncontrolledButtonDropdown>
+        ) : null}
       </div>
     </nav>
   );
-}
- 
+};
+
 export default Navbar;
 
 const adminMenu = [
   {
     id: 1,
-    name: "Dashboard",
-    path: "/admin-dashboard"
-  }
-
-]
+    name: "Employees",
+    path: "/employees",
+  },
+];

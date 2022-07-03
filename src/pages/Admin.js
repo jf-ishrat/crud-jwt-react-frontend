@@ -1,71 +1,88 @@
-import {useEffect, useState} from 'react';
-import { useNavigate } from 'react-router-dom';
-import AuthService from "../services/auth.service";
+import { useEffect, useState } from "react";
+import { useNavigate, Navigate } from "react-router-dom";
+import CustomTable from "../component/CustomTable";
+import CustomPagination from "../component/CustomPagination";
+import useAuth from "../hooks/useAuth";
+import authHeader from "../services/auth-header";
+const axios = require("axios").default;
 
-import CustomTable from '../component/CustomTable';
-import authHeader from '../services/auth-header';
-const axios = require('axios').default;
+const PAGE_NUMBER = 0;
 
 const Admin = () => {
+  const [data, setData] = useState(null);
+  const [page, setPage] = useState(PAGE_NUMBER);
+  const [totalPages, setTotalPages] = useState(0);
 
-    const [data, setData] = useState(null);
-    
-    const [value, setValue] = useState(null);
-   // const user = AuthService.getCurrentUser();
+  const [value, setValue] = useState(null);
 
-    const navigate = useNavigate();
-    const onChangeValue = (val) =>{
-        setValue(val);
+  const auth = useAuth();
 
-    }
+  const navigate = useNavigate();
+  const onChangeValue = (val) => {
+    setValue(val);
+  };
 
-    useEffect(()=>{
-        const user = AuthService.getCurrentUser();
-        if(!user){
-            navigate('/');
+  const onPageChange = (pageNo) => {
+    console.log("page: ", pageNo);
+    setPage(pageNo);
+  };
 
+  useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+    const getData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/api/employees?page=${page}`,
+          { headers: auth.authHeader() },
+          { signal: controller.signal }
+        );
+
+        const result = await response.data;
+
+        if (isMounted) {
+          setData(result.content);
+          setTotalPages(result.totalPages);
         }
-        else{
-            let isMounted = true;
-            const controller = new AbortController();
-          const getData = async()=>{
-            try {
-                const response = await axios.get("http://localhost:8080/api/employees",{ headers: authHeader()}, {signal: controller.signal});
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-                const result = await response.data;
-                isMounted && setData(result)
-                
-            } catch (error) {
+    getData();
 
-                console.log(error);
-                
-            }
-          }
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, [value, page]);
 
-          getData();
+  return (
+    <div className="container-class">
+      <CustomTable
+        tableHeaders={tableHeaders}
+        tableContents={data}
+        onChangeValue={onChangeValue}
+      />
 
-          return ()=>{
-            isMounted = false;
-            controller.abort();
+      {totalPages > 1 && (
+        <CustomPagination
+          totalPages={totalPages}
+          onPageChange={onPageChange}
+          currentPage={page}
+        />
+      )}
+    </div>
+  );
+};
 
-          }
-
-        }
-
-     },[value]);
-
-
-    
-    return (
-        <div className='container-class'>
-            <CustomTable  tableHeaders = {tableHeaders} tableContents = {data} onChangeValue={onChangeValue}/>
-
-        </div>
-    );
-}
- 
 export default Admin;
 
 const tableHeaders = [
-    "Employee ID", "First Name","Email","Role", "Status"
-]
+  "Employee ID",
+  "First Name",
+  "Last Name",
+  "Email",
+  "Role",
+  "Status",
+];
