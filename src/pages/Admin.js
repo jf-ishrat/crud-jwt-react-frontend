@@ -3,7 +3,6 @@ import { useNavigate, Navigate } from "react-router-dom";
 import CustomTable from "../component/CustomTable";
 import CustomPagination from "../component/CustomPagination";
 import useAuth from "../hooks/useAuth";
-import authHeader from "../services/auth-header";
 const axios = require("axios").default;
 
 const PAGE_NUMBER = 0;
@@ -32,6 +31,7 @@ const Admin = () => {
     const controller = new AbortController();
     const getData = async () => {
       try {
+        console.log("inside get data");
         const response = await axios.get(
           `http://localhost:8080/api/employees?page=${page}`,
           { headers: auth.authHeader() },

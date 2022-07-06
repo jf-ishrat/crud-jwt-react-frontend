@@ -48,19 +48,22 @@ const CustomTable = ({ tableHeaders, tableContents, onChangeValue }) => {
                     >
                       Edit
                     </Button>
-                    <Button
-                      color="danger"
-                      outline
-                      onClick={(e) =>
-                        window.confirm(
-                          "Are you sure you wish to delete this member?"
-                        )
-                          ? handleDelete(item.employeeId)
-                          : null
-                      }
-                    >
-                      Delete
-                    </Button>
+                    {auth?.user?.permissions?.includes("delete-member") && (
+                      <Button
+                        color="danger"
+                        outline
+                        onClick={(e) =>
+                          window.confirm(
+                            "Are you sure you wish to delete this member?"
+                          )
+                            ? handleDelete(item.employeeId)
+                            : null
+                        }
+                      >
+                        Delete
+                      </Button>
+                    )}
+
                     <Button
                       color="primary"
                       outline

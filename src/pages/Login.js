@@ -89,7 +89,6 @@ const Login = () => {
             LOG IN
           </Button>
         </Form>
-        <a href="/@{/oauth2/authorization/google}">Login with Google</a>
       </div>
     </div>
   );
